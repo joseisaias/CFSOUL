@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mx.api.model.Persona;
 import com.mx.api.model.Usuario;
 import com.mx.api.model.UsuarioRol;
 
@@ -30,16 +31,19 @@ public class UserDetailsSegImpl implements UserDetails {
 
 	@JsonIgnore
 	private String password;
+	
+	private Persona persona;
 
 	private Collection<? extends GrantedAuthority> authorities;
 
 	public UserDetailsSegImpl(Long id, String username, String password,
-			Collection<? extends GrantedAuthority> authorities, String clave) {
+			Collection<? extends GrantedAuthority> authorities, String clave, Persona persona) {
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.authorities = authorities;
 		this.clave = clave;
+		this.persona =  persona;
 	}
 
 	public static UserDetailsSegImpl build(Usuario user, List<UsuarioRol> usRol) {
@@ -52,7 +56,7 @@ public class UserDetailsSegImpl implements UserDetails {
 				user.getUsuario(), 
 				user.getPassword(), 
 				authorities,
-				user.getEstatus().getClave());
+				user.getEstatus().getClave(),user.getPersona());
 	}
 
 	@Override

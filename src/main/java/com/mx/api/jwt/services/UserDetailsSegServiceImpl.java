@@ -7,8 +7,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.mx.api.model.Usuario;
 import com.mx.api.model.UsuarioRol;
+import com.mx.api.repository.PersonaRepository;
 import com.mx.api.repository.UserRepository;
 import com.mx.api.repository.UsuarioRolRepository;
 
@@ -22,6 +24,9 @@ public class UserDetailsSegServiceImpl implements UserDetailsService {
 	
 	@Autowired
 	UsuarioRolRepository usuarioRolRepository;
+	
+	@Autowired
+	PersonaRepository personaRepository;
 
 	@Override
 	@Transactional

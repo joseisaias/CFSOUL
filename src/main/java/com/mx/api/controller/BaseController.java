@@ -13,6 +13,9 @@ public class BaseController {
 	
 	public static final boolean ERROR = false;
 	
+	public static final int ACTIVO = 1;
+	public static final int INACTIVO = 0;
+	
 	public static final int HTTP_SUCCESS = 200;
 	
 	public static final int HTTP_BAD_REQUEST = 400;

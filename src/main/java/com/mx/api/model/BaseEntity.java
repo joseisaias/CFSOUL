@@ -44,7 +44,7 @@ public class BaseEntity implements Serializable {
 	private Long usuarioModificacion;
 	
 	@Column(name = "ind_status")
-	private int indStatus;
+	private Integer indStatus = 1;
 	
 	
 }

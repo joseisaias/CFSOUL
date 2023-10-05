@@ -2,13 +2,56 @@
   {
     "name": "app.jwtSecret",
     "type": "java.lang.String",
-    "description": "SECRET KEY PARA TOKEN",
-    "default":false
+    "description": "SECRET KEY PARA TOKEN"
   },
   {
     "name": "app.jwtExpirationMs",
     "type": "java.lang.String",
-    "description": "TIEMPO DE EXPIRACIÓN DEL TOKEN EN MILISEGUNDOS",
-    "default":false
+    "description": "TIEMPO DE EXPIRACION DEL TOKEN EN MILISEGUNDOS"
+  },
+  {
+    "name": "conexion.smtp.auth",
+    "type": "java.lang.String",
+    "description": "A description for 'conexion.smtp.auth'"
+  },
+  {
+    "name": "conexion.smtp.password",
+    "type": "java.lang.String",
+    "description": "A description for 'conexion.smtp.password'"
+  },
+  {
+    "name": "conexion.smtp.user",
+    "type": "java.lang.String",
+    "description": "A description for 'conexion.smtp.user'"
+  },
+  {
+    "name": "conexion.smtp.port",
+    "type": "java.lang.String",
+    "description": "A description for 'conexion.smtp.port'"
+  },
+  {
+    "name": "conexion.smtp.start",
+    "type": "java.lang.String",
+    "description": "A description for 'conexion.smtp.start'"
+  },
+  {
+    "name": "conexion.smtp.host",
+    "type": "java.lang.String",
+    "description": "A description for 'conexion.smtp.host'"
+  },
+  {
+    "name": "conexion.smtp.name",
+    "type": "java.lang.String",
+    "description": "A description for 'conexion.smtp.name'"
+  },
+  {
+    "name": "app.security.secret",
+    "type": "java.lang.String",
+    "description": "A description for 'app.security.secret'"
+  },
+  {
+    "name": "app.security.expiration",
+    "type": "java.lang.String",
+    "description": "A description for 'app.security.expirationMs'"
   }
 ]}

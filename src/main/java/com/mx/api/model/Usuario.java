@@ -13,12 +13,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Usuario extends BaseEntity {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5545075528272675740L;
+public class Usuario {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -28,6 +23,16 @@ public class Usuario extends BaseEntity {
 	private String usuario;
 	
 	private String password;
+	
+	@Column(name="token_password")
+	private String tokenPassword;
+	
+	@Column(name="fecha_password")
+	private String fechaPassword;
+	
+	@ManyToOne
+	@JoinColumn(name="id_persona")
+	private Persona persona;
 	
 	@ManyToOne
 	@JoinColumn(name="id_estatus_usuario")

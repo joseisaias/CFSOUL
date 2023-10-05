@@ -2,6 +2,7 @@
 *.class
 .classpath
 
+
 # Log file
 *.log
 *.metadata
@@ -26,3 +27,16 @@ target/*
 hs_err_pid*
 replay_pid*
 
+.classpath
+.factorypath
+.classpath
+.git_ISSAC/*
+.classpath
+.factorypath
+pom.xml
+.settings/org.eclipse.core.resources.prefs
+.settings/org.eclipse.jdt.core.prefs
+.vscode/launch.json
+.vscode/settings.json
+target/classes/application.properties
+target/classes/META-INF/additional-spring-configuration-metadata.json

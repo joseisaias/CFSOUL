@@ -35,6 +35,9 @@ public class CatalogoDao {
 	
 	@SuppressWarnings("deprecation")
 	public List<DomicilioSelect> getCatDomicilioByCp(String cp) {
+		if(cp.length() < 5) {
+			cp = "0" + cp;
+		}
 		String sql = "SELECT \r\n "
 				+ " id_cat_domicilio, \r\n "
 				+ " cp, \r\n "
@@ -54,6 +57,7 @@ public class CatalogoDao {
 	
 	@SuppressWarnings("deprecation")
 	public List<CatDetalleResponse> getCatDetalleByClave(String clave) {
+		
 		String sql = " SELECT \r\n "
 				+ " id_cat_detalle,\r\n "
 				+ " descripcion,\r\n "

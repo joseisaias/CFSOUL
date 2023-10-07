@@ -10,6 +10,6 @@ import com.mx.api.model.CuentaBancaria;
 @Repository
 public interface CuentaBancariaRepository extends JpaRepository<CuentaBancaria, Long> {
 
-	Optional<CuentaBancaria> findByIdEmpleado(Long idEmpleado);
+	Optional<CuentaBancaria> findByIdPersona(Long idPersona);
 	
 }

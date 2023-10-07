@@ -8,6 +8,14 @@ import lombok.Setter;
 public class EmpleadoDTO {
 	
 	private Long idEmpleado;
+	
+	private Long idPersona;
+	
+	private Long idCliente;
+	
+	private Long idCuentaBancaria;
+	
+	private Long idDomicilio;
 
 	private String nombreCompleto;
 	

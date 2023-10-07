@@ -1,5 +1,7 @@
 package com.mx.api.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -54,5 +56,10 @@ public class EmpleadoController extends BaseController{
 	public ResponseEntity<?> save(@RequestBody EmpleadoRequest r){
 		empleadoService.guardar(r);
 		return ResponseEntity.ok(new GenericResponseDTO<>(SUCCESS, HTTP_SUCCESS, null, null, SUCCESS_MESSAGE, "GUARDADO EXITOSAMENTE"));
+	}
+	
+	@PostMapping("/guardarEmpleadosExcel")
+	public ResponseEntity<?> save(@RequestBody List<EmpleadoRequest>  r){
+		return ResponseEntity.ok(new GenericResponseDTO<>(SUCCESS, HTTP_SUCCESS, null, null, SUCCESS_MESSAGE, empleadoService.guardarExcel(r)));
 	}
  }

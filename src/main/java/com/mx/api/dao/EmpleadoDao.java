@@ -48,4 +48,48 @@ public class EmpleadoDao {
 			return dto;
 		});
 	}
+	
+	@SuppressWarnings("deprecation")
+	public List<EmpleadoDTO> getEmpleadoRegistrado(String rfc, String correo) {
+		String sql = "select \r\n"
+				+ "p.id_persona, e.id_cliente, e.id_empleado, cb.id_cuenta_bancaria, d.id_domicilio \r\n"
+				+ "from persona p \r\n"
+				+ "join empleado e ON p.id_persona = e.id_persona \r\n"
+				+ "left join cuenta_bancaria cb on cb.id_persona = p.id_persona and cb.ind_status = 1 \r\n"
+				+ "left join persona_domicilio pd ON pd.id_persona = p.id_persona \r\n"
+				+ "left join domicilio d on d.id_domicilio = pd.id_domicilio and d.ind_status = 1 \r\n"
+				+ "where \r\n"
+				+ "(UPPER(rfc) = UPPER(?) \r\n"
+				+ "or UCASE(correo_electronico) = UCASE(?)) \r\n"
+				+ "and p.ind_status = 1 \r\n"
+				+ "and e.ind_status = 1 ";
+		
+		return jdbcTemplate.query(sql, new Object[]{rfc, correo}, (rs, index) ->{
+			EmpleadoDTO dto = new EmpleadoDTO();
+			dto.setIdPersona(rs.getLong("id_persona"));
+			dto.setIdCliente(rs.getLong("id_cliente"));
+			dto.setIdEmpleado(rs.getLong("id_empleado"));
+			dto.setIdCuentaBancaria(rs.getLong("id_cuenta_bancaria"));
+			dto.setIdDomicilio(rs.getLong("id_domicilio"));
+			return dto;
+		});
+	}
+	
+	@SuppressWarnings("deprecation")
+	public List<EmpleadoDTO> getEmpleadoCliente(Long idPersona, Long idCliente) {
+		String sql = "select \r\n"
+				+ "p.id_persona  \r\n"
+				+ "from persona p \r\n"
+				+ "where \r\n"
+				+ "(UPPER(rfc) = UPPER(?) \r\n"
+				+ "or UCASE(correo_electronico) = UCASE(?)) \r\n"
+				+ "and ind_status = 1";
+		
+		return jdbcTemplate.query(sql, new Object[]{idPersona, idCliente}, (rs, index) ->{
+			EmpleadoDTO dto = new EmpleadoDTO();
+			dto.setIdPersona(rs.getLong("id_persona"));
+			return dto;
+		});
+	}
+	
  }

@@ -29,7 +29,7 @@ public class CuentaBancaria extends BaseEntity {
 	private Long idCuentaBancaria;
 	
 	@Column
-	private Long idEmpleado;
+	private Long idPersona;
 	
 	@Column
 	private String clabeInterbancaria;

@@ -1,10 +1,13 @@
 package com.mx.api.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mx.api.dao.EmpleadoDao;
+import com.mx.api.dto.EmpleadoDTO;
 import com.mx.api.dto.request.EmpleadoRequest;
 import com.mx.api.dto.response.CatDetalleResponse;
 import com.mx.api.model.CuentaBancaria;
@@ -40,6 +43,50 @@ public class EmpleadoService {
 	@Autowired
 	private CatalogoService catalogoService;
 	
+	@Autowired
+	private EmpleadoDao empleadoDao;
+	
+	
+	public List<EmpleadoRequest> guardarExcel(List<EmpleadoRequest> r) {
+		List<EmpleadoRequest> error = new ArrayList<>();
+		for (EmpleadoRequest e : r) {
+			List<EmpleadoDTO> emp =  empleadoDao.getEmpleadoRegistrado(e.getPersona().getRfc(), e.getPersona().getCorreoElectronico());
+			if(emp.isEmpty()) {
+				guardar(e);
+			}else {
+				EmpleadoDTO empl = emp.get(0);
+				if(empl.getIdCliente() != e.getEmpleado().getIdCliente()) {
+					error.add(e);
+				}else {
+					Empleado empleado = empleadoRepository.findById(empl.getIdEmpleado()).orElse(new Empleado());
+					empleado.setMontoMaximoPrestamo(e.getEmpleado().getMontoMaximoPrestamo());
+					empleado.setSalario(e.getEmpleado().getSalario());
+					e.setEmpleado(empleado);
+					CuentaBancaria cb = cuentaBancariaRepository.findByIdPersona(empl.getIdPersona()).orElse(new CuentaBancaria());
+					cb.setClabeInterbancaria(e.getCuentaBancaria().getClabeInterbancaria());
+					cb.setNumeroCuenta(e.getCuentaBancaria().getNumeroCuenta());
+					e.setCuentaBancaria(cb);
+					e.setPersona(personaRepository.findById(empl.getIdPersona()).orElse(new Persona()));
+					
+					List<PersonaDomicilio> listD =  personaDomicilioRepository.findByIdPersona(empl.getIdPersona());
+					if(listD.isEmpty()) {
+						e.setDomicilio(new Domicilio());
+					}
+					for (PersonaDomicilio ed : listD) {
+						Domicilio domicilio = domicilioRepository.findById(ed.getIdDomicilio()).get();
+						if(domicilio.getIndStatus() == 1) {
+							e.setDomicilio(domicilio);
+						}
+					}
+					guardar(e);
+				}
+				
+			}
+			
+		}
+		return error;
+	}
+	
 	public void guardar(EmpleadoRequest r) {
 		boolean isNuevo = true;
 		CatDetalleResponse cd = catalogoService.getCatDetalleByClave(CatDetalleEnum.TIP_DOM_EMPL.name()).get(0);
@@ -55,7 +102,7 @@ public class EmpleadoService {
 		r.getDomicilio().setIdTipoDomicilio(cd.getIdCatDetalle());
 		domicilioRepository.save(r.getDomicilio());
 		
-		r.getCuentaBancaria().setIdEmpleado(r.getEmpleado().getIdEmpleado());
+		r.getCuentaBancaria().setIdPersona(r.getPersona().getIdPersona());
 		cuentaBancariaRepository.save(r.getCuentaBancaria());
 		if(isNuevo)
 			personaDomicilioRepository.save(new PersonaDomicilio(r.getDomicilio().getIdDomicilio(), r.getPersona().getIdPersona()));
@@ -90,7 +137,7 @@ public class EmpleadoService {
 		r.setEmpleado(empleadoRepository.findById(idEmpleado).orElse(new Empleado()));
 		Long idPersona = r.getEmpleado().getIdPersona()!= null ?r.getEmpleado().getIdPersona() : 0;
 		r.setPersona(personaRepository.findById(idPersona).orElse(new Persona()));
-		r.setCuentaBancaria(cuentaBancariaRepository.findByIdEmpleado(idEmpleado).orElse(new CuentaBancaria())); 
+		r.setCuentaBancaria(cuentaBancariaRepository.findByIdPersona(idPersona).orElse(new CuentaBancaria())); 
 		List<PersonaDomicilio> listD =  personaDomicilioRepository.findByIdPersona(idPersona);
 		if(listD.isEmpty()) {
 			r.setDomicilio(new Domicilio());

@@ -31,8 +31,8 @@ public class UserDetailsSegImpl implements UserDetails {
 
 	@JsonIgnore
 	private String password;
-	
-	private Persona persona;
+
+private Persona persona;
 
 	private Collection<? extends GrantedAuthority> authorities;
 
@@ -43,7 +43,7 @@ public class UserDetailsSegImpl implements UserDetails {
 		this.password = password;
 		this.authorities = authorities;
 		this.clave = clave;
-		this.persona =  persona;
+this.persona =  persona;
 	}
 
 	public static UserDetailsSegImpl build(Usuario user, List<UsuarioRol> usRol) {

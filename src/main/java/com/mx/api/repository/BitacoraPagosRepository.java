@@ -11,4 +11,7 @@ import com.mx.api.model.BitacoraPagos;
 public interface BitacoraPagosRepository extends JpaRepository<BitacoraPagos, Long>{
 
 	List<BitacoraPagos> findByFechaPagoAndIndStatus(String fechaPago, Integer indEstatus );
+	
+	List<BitacoraPagos> findByidCredito(Long idCredito);
+	
 }

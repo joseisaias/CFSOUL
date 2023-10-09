@@ -16,11 +16,10 @@ import com.mx.api.dto.ClienteDomicilioDTO;
 import com.mx.api.dto.commons.GenericResponseDTO;
 import com.mx.api.dto.request.ClienteRequest;
 import com.mx.api.model.Cliente;
-import com.mx.api.model.ClienteDomicilio;
 import com.mx.api.model.Domicilio;
-import com.mx.api.repository.ClienteDomicilioRepository;
 import com.mx.api.repository.ClienteRepository;
 import com.mx.api.repository.DomicilioRepository;
+import com.mx.api.service.ClienteService;
 import com.mx.api.util.cons.CatDetalleEnum;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ClienteController extends BaseController {
 
-	/*@SuppressWarnings("unused")
-	private ObjectMapper mapper = new ObjectMapper();*/
+
 	
 	@Autowired
 	private ClientesDao clientDao;
@@ -42,7 +40,8 @@ public class ClienteController extends BaseController {
 	@Autowired
 	private DomicilioRepository domicilioRepository;
 	@Autowired
-	private ClienteDomicilioRepository clienteDomicilioRepository;
+	private ClienteService clienteService;
+	
 	
 	@GetMapping("/getClientes")
 	public ResponseEntity<?> getClientes() {
@@ -83,18 +82,8 @@ public class ClienteController extends BaseController {
 	
 	@PostMapping("/guardarCliente")
 	public ResponseEntity<?> guardarCliente(@RequestBody ClienteRequest e) {
-		boolean isNewDomicilioF = e.getDomicilioFiscal().getIdDomicilio() == null;
-		boolean isNewDomicilioC = e.getDomicilioComercial().getIdDomicilio() == null;
 		try {
-			clienteRepository.save(e.getCliente());
-			domicilioRepository.save(e.getDomicilioComercial());
-			domicilioRepository.save(e.getDomicilioFiscal());
-			if(isNewDomicilioC) {
-				clienteDomicilioRepository.save(new ClienteDomicilio(e.getDomicilioComercial().getIdDomicilio(), e.getCliente().getIdCliente()));
-			}
-			if(isNewDomicilioF) {
-				clienteDomicilioRepository.save(new ClienteDomicilio(e.getDomicilioFiscal().getIdDomicilio(), e.getCliente().getIdCliente()));
-			}
+			clienteService.guardarCliente(e);
 			return ResponseEntity.ok(new GenericResponseDTO<>(SUCCESS, HTTP_SUCCESS, null, null, SUCCESS_MESSAGE, clientDao.getClientes()));
 		}catch(Exception ex) {
 			log.error("Ocurrio un error en el registro", ex);

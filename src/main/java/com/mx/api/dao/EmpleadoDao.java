@@ -1,5 +1,6 @@
 package com.mx.api.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.mx.api.dto.EmpleadoDTO;
+import com.mx.api.dto.response.EmpleadoSeguimientoResponse;
 
 @Service
 public class EmpleadoDao {
@@ -47,6 +49,57 @@ public class EmpleadoDao {
 			dto.setIndStatusString(rs.getString("indStatusString"));
 			return dto;
 		});
+	}
+	
+	@SuppressWarnings("deprecation")
+	public EmpleadoSeguimientoResponse getEmpleadosByIdClienteSeguimiento(Long id, String fechaPago) {
+		EmpleadoSeguimientoResponse resp = new EmpleadoSeguimientoResponse();
+		String sql = "select bp.id_credito,\r\n"
+				+ "e.id_empleado as idEmpleado, \r\n"
+				+ "bp.num_pago, \r\n"
+				+ "bp.pago_capital + bp.pago_interes as cuota,\r\n "
+				+ "bp.fecha_pago,\r\n"
+				+ "c.num_pagos,\r\n"
+				+ "c.pago_total,\r\n"
+				+ "e.monto_maximo_prestamo,\r\n"
+				+ "e.salario,\r\n"
+				+ "concat(p.nombre,' ',p.apellido_paterno) as nombreCompleto,\r\n"
+				+ "p.correo_electronico \r\n"
+				+ "from bitacora_pagos bp\r\n"
+				+ "join credito c on bp.id_credito = c.id_credito \r\n"
+				+ "join empleado e on e.id_empleado = c.id_empleado \r\n"
+				+ "join persona p on p.id_persona = e.id_persona \r\n"
+				+ "where \r\n"
+				+ "bp.fecha_pago = ? \r\n"
+				+ "and bp.id_estatus_pago = 125 \r\n"
+				+ "and bp.ind_status = 1 \r\n"
+				+ "and e.id_cliente = ?";
+		resp.setEmpleados(
+		jdbcTemplate.query(sql, new Object[]{fechaPago, id}, (rs, index) ->{
+			EmpleadoDTO dto = new EmpleadoDTO();
+			dto.setIdEmpleado(rs.getLong("idEmpleado"));
+			dto.setNombreCompleto(rs.getString("nombreCompleto"));
+			dto.setMontoMaximoPrestamo(rs.getString("monto_maximo_prestamo"));
+			dto.setEmail(rs.getString("correo_electronico"));
+			
+			dto.setIdCredito(rs.getLong("id_credito"));
+			
+			dto.setNumPago(rs.getInt("num_pago"));
+			dto.setNumPagos(rs.getInt("num_pagos"));
+			dto.setSalario(rs.getBigDecimal("salario"));
+			dto.setCuota(rs.getBigDecimal("cuota"));
+			dto.setPagoTotal(rs.getBigDecimal("pago_total"));
+			dto.setFechaPago(rs.getString("fecha_pago"));
+			return dto;
+		})
+		);
+		BigDecimal montoDeudaTotal = new BigDecimal(0);
+		for (EmpleadoDTO item : resp.getEmpleados()) {
+			montoDeudaTotal = montoDeudaTotal.add(item.getCuota());
+		}
+		resp.setMontoDeudaTotal(montoDeudaTotal);
+		
+		return resp;
 	}
 	
 	@SuppressWarnings("deprecation")

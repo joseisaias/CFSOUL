@@ -1,5 +1,7 @@
 package com.mx.api.dto;
 
+import java.math.BigDecimal;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +14,8 @@ public class EmpleadoDTO {
 	private Long idPersona;
 	
 	private Long idCliente;
+	
+	private Long idCredito;
 	
 	private Long idCuentaBancaria;
 	
@@ -34,4 +38,11 @@ public class EmpleadoDTO {
 	private String montoTotalPrestamo;
 	
 	private String indStatusString;
+	
+	private Integer numPago;
+	private Integer numPagos;
+	private BigDecimal salario;
+	private BigDecimal cuota;
+	private BigDecimal pagoTotal;
+	private String fechaPago;
 }

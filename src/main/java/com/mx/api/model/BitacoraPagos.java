@@ -24,7 +24,7 @@ public class BitacoraPagos extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
-	private Long idBitacoraPago;
+	private Long idBitacoraPagos;
 	
 	@Column
 	private Long idCredito;
@@ -38,11 +38,14 @@ public class BitacoraPagos extends BaseEntity {
 	@Column
 	private Long totalDias;
 	
-	@Column
+	@Column(name = "fecha_pago")
 	private String fechaPago;
 	
 	@Column
 	private BigDecimal pagoCapital;
+	
+	@Column
+	private BigDecimal cuota;
 	
 	@Column
 	private BigDecimal pagoInteres;

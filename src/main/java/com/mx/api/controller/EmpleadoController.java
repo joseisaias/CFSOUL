@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mx.api.dao.EmpleadoDao;
 import com.mx.api.dto.commons.GenericResponseDTO;
 import com.mx.api.dto.request.EmpleadoRequest;
+import com.mx.api.repository.BitacoraPagosRepository;
 import com.mx.api.service.EmpleadoService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,6 +30,9 @@ public class EmpleadoController extends BaseController{
 	@Autowired
 	private EmpleadoService empleadoService;
 	
+	@Autowired
+	private BitacoraPagosRepository amortizacionRepository;
+	
 	@GetMapping("/{idCliente}/getEmpleadosByIdCliente")
 	public ResponseEntity<?> getEmpleadosByIdCliente(@PathVariable Long idCliente){
 		try {
@@ -39,6 +43,22 @@ public class EmpleadoController extends BaseController{
 		}
 	}
 	
+	@GetMapping("/{idCliente}/{fechaPago}/getEmpleadosByIdClienteSeguimiento")
+	public ResponseEntity<?> getEmpleadosByIdClienteSeguimiento(@PathVariable Long idCliente, @PathVariable String fechaPago){
+		try {
+			return ResponseEntity.ok(new GenericResponseDTO<>(SUCCESS, HTTP_SUCCESS, null, null, SUCCESS_MESSAGE, 
+					empleadoDao.getEmpleadosByIdClienteSeguimiento(idCliente, fechaPago.replace("-", "/"))));
+		}catch(Exception ex) {
+			log.error("Ocurrio un error en el registro", ex);
+			return ResponseEntity.ok(new GenericResponseDTO<>(ERROR, HTTP_NOT_FOUND, null, ERROR_MESSAGE, null, null));
+		}
+	}
+	
+	@GetMapping("/{idCredito}/getTablaAmortizacion")
+	public ResponseEntity<?> getTablaAmortizacion(@PathVariable Long idCredito) {
+		return ResponseEntity.ok(new GenericResponseDTO<>(SUCCESS, HTTP_SUCCESS, null, null, SUCCESS_MESSAGE, 
+				amortizacionRepository.findByidCredito(idCredito)));
+	}
 
 	@GetMapping("/{idPersona}/getEmpleadoById")
 	public ResponseEntity<?> getEmpleadoById(@PathVariable Long idPersona) {

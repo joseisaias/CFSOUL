@@ -21,13 +21,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mx.api.dao.LoginDao;
 import com.mx.api.dto.commons.GenericResponseDTO;
 import com.mx.api.dto.request.LoginRequest;
 import com.mx.api.dto.response.JwtResponse;
+import com.mx.api.dto.response.LoginResponse;
 import com.mx.api.jwt.JwtUtils;
 import com.mx.api.jwt.services.UserDetailsSegImpl;
 import com.mx.api.model.Usuario;
-import com.mx.api.repository.EmpleadoRepository;
 import com.mx.api.repository.RolRepository;
 import com.mx.api.repository.UserRepository;
 import com.mx.api.util.cons.EstatusUsuarioEnum;
@@ -58,11 +59,12 @@ public class LoginController extends BaseController{
 	@Autowired
 	JwtUtils jwtUtils;
 	
-	@Autowired
-	private EmpleadoRepository empleadoRepository;
 	
 	@Value("${app.security.expiration}")
 	private String jwtExpirationMs;
+	
+	@Autowired
+	private LoginDao loginDao;
 	
 	
 	@ApiOperation(value = "Servicio de autenticación")
@@ -78,15 +80,15 @@ public class LoginController extends BaseController{
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = jwtUtils.generateJwtToken(authentication);
 		
-		UserDetailsSegImpl userDetails = (UserDetailsSegImpl) authentication.getPrincipal();		
+		UserDetailsSegImpl userDetails = (UserDetailsSegImpl) authentication.getPrincipal();
+		
 		List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
 		if (userDetails.getClave().equals(EstatusUsuarioEnum.EST_US_ACTIVO.name()) 
 				|| userDetails.getClave().equals(EstatusUsuarioEnum.EST_US_NUEVO.name())
-		) {
-			
-			
-			return ResponseEntity.ok(new JwtResponse(userDetails.getPersona(), jwt, userDetails.getId(), userDetails.getUsername(), roles,
-					userDetails.getClave(), jwtExpirationMs, empleadoRepository.findByIdPersonaAndIndStatus(userDetails.getPersona().getIdPersona(), ACTIVO)));
+		) {			
+			LoginResponse info =  loginDao.parametrosLogin(userDetails.getId(), userDetails.getPersona());
+			return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), roles,
+					userDetails.getClave(), jwtExpirationMs, info));
 		} else {
 			return new ResponseEntity<>(ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
 		}

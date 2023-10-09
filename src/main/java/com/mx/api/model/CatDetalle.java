@@ -25,7 +25,7 @@ public class CatDetalle extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_cat_detalle")
-    private Integer idCatDetalle;
+    private Long idCatDetalle;
     
     @Column(name = "id_cat_detalle_padre")
     private String idCatDetallePadre;
@@ -44,11 +44,11 @@ public class CatDetalle extends BaseEntity implements Serializable {
     public CatDetalle() {
     }
 
-    public CatDetalle(Integer id) {
+    public CatDetalle(Long id) {
         this.idCatDetalle = id;
     }
 
-    public CatDetalle(Integer idCatDetalle, String descripcion, String clave, Date fechaAlta) {
+    public CatDetalle(Long idCatDetalle, String descripcion, String clave, Date fechaAlta) {
         this.idCatDetalle = idCatDetalle;
         this.descripcion = descripcion;
         this.clave = clave;

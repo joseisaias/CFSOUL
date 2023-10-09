@@ -21,9 +21,10 @@ import com.mx.api.repository.EmpleadoRepository;
 import com.mx.api.repository.PersonaDomicilioRepository;
 import com.mx.api.repository.PersonaRepository;
 import com.mx.api.util.cons.CatDetalleEnum;
+import com.mx.api.util.cons.RolEnum;
 
 @Service
-public class EmpleadoService {
+public class EmpleadoService extends GenericService {
 
 	@Autowired
 	private EmpleadoRepository empleadoRepository;
@@ -45,6 +46,8 @@ public class EmpleadoService {
 	
 	@Autowired
 	private EmpleadoDao empleadoDao;
+	
+	
 	
 	
 	public List<EmpleadoRequest> guardarExcel(List<EmpleadoRequest> r) {
@@ -89,13 +92,20 @@ public class EmpleadoService {
 	
 	public void guardar(EmpleadoRequest r) {
 		boolean isNuevo = true;
+		boolean registraUsuario = false;
 		CatDetalleResponse cd = catalogoService.getCatDetalleByClave(CatDetalleEnum.TIP_DOM_EMPL.name()).get(0);
 		if(r.getEmpleado()!=null && r.getEmpleado().getIdEmpleado() != null
 				&& r.getDomicilio()!=null && r.getDomicilio().getIdDomicilio() != null) {
 			isNuevo=false;
 		}
+		if(r.getPersona().getIdPersona() == null) {
+			registraUsuario = true;
+		}
 		personaRepository.save(r.getPersona());
 		
+		if(registraUsuario) {
+			registraUsuarioRol(r.getPersona(),RolEnum.ROL_EMPL.name());
+		}
 		r.getEmpleado().setIdPersona(r.getPersona().getIdPersona());
 		empleadoRepository.save(r.getEmpleado());
 		
@@ -108,29 +118,6 @@ public class EmpleadoService {
 			personaDomicilioRepository.save(new PersonaDomicilio(r.getDomicilio().getIdDomicilio(), r.getPersona().getIdPersona()));
 	}
 	
-	public void excel() {
-		
-		/**
-		 * preguntar si existe la persona por el RFC
-		 * 
-		 * si existe{
-		 * r.setPersona(consulta del RFC)
-		 * preguntar si existe empleado con el id del cliente y el id de la persona
-		 * si existe{
-		 * r.setEmpleado(resultado de la busqueda por idCliente y idPersona)
-		 * recuperacuenta bancaria
-		 * recupera domicilio
-		 * }
-		 * }else{
-		 * 
-		 * }
-		 * 
-		 * 
-		 * 
-		 */
-		
-		/* recorrer el excel se contemplan validaciones */
-	}
 	
 	public EmpleadoRequest getEmpleadoById(Long idEmpleado) {
 		EmpleadoRequest r = new EmpleadoRequest();

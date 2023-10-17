@@ -1,6 +1,9 @@
 package com.mx.api.dto.response;
 
 import java.util.List;
+
+import com.mx.api.model.Rol;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,11 +15,11 @@ public class JwtResponse {
 	private Long id;
 	private String username;
 	private String claveEstatusUsuario;
-	private List<String> roles;
+	private List<Rol> roles;
 	private String timeToken;
 	private LoginResponse info;
 	
-	public JwtResponse(String accessToken, Long id, String username, List<String> roles, String claveEstatusUsuario, String timeToken, LoginResponse info) {
+	public JwtResponse(String accessToken, Long id, String username, List<Rol> roles, String claveEstatusUsuario, String timeToken, LoginResponse info) {
 		this.token = accessToken;
 		this.id = id;
 		this.username = username;

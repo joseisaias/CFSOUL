@@ -10,6 +10,8 @@ import com.mx.api.dao.EmpleadoDao;
 import com.mx.api.dto.EmpleadoDTO;
 import com.mx.api.dto.request.EmpleadoRequest;
 import com.mx.api.dto.response.CatDetalleResponse;
+import com.mx.api.dto.response.CreditosEmpleado;
+import com.mx.api.model.Credito;
 import com.mx.api.model.CuentaBancaria;
 import com.mx.api.model.Domicilio;
 import com.mx.api.model.Empleado;
@@ -117,8 +119,7 @@ public class EmpleadoService extends GenericService {
 		if(isNuevo)
 			personaDomicilioRepository.save(new PersonaDomicilio(r.getDomicilio().getIdDomicilio(), r.getPersona().getIdPersona()));
 	}
-	
-	
+
 	public EmpleadoRequest getEmpleadoById(Long idEmpleado) {
 		EmpleadoRequest r = new EmpleadoRequest();
 		r.setEmpleado(empleadoRepository.findById(idEmpleado).orElse(new Empleado()));
@@ -137,12 +138,14 @@ public class EmpleadoService extends GenericService {
 		}
 		return r; 
 	}
-	
-	
+		
 	public void activaInactivaEmpleado(Long idEmpleado) {
 		Empleado e = empleadoRepository.findById(idEmpleado).get();
 		e.setIndStatus(e.getIndStatus()==1 ? 0:1);
 		empleadoRepository.save(e);
 	}
-		
+	
+	public List<CreditosEmpleado> getCreditosByEmpleado(Long idEmpleado) {
+		return empleadoDao.getCreditosByEmpleado(idEmpleado);
+	}
 }

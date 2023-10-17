@@ -33,6 +33,9 @@ public class BitacoraPagos extends BaseEntity {
 	private Long idEstatusPago;
 	
 	@Column
+	private Long idConciliacion;
+	
+	@Column
 	private Long numPago;
 	
 	@Column

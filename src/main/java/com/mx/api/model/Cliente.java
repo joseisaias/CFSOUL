@@ -47,6 +47,7 @@ public class Cliente extends BaseEntity {
 	@Column(name = "razon_social")
 	private String razonSocial;
 	
+	@Column
 	private String nombre;
 	
 	@Column(name = "apellido_paterno")

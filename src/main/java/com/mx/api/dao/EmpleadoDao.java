@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.mx.api.dto.EmpleadoDTO;
+import com.mx.api.dto.response.CreditosEmpleado;
 import com.mx.api.dto.response.EmpleadoSeguimientoResponse;
 
 @Service
@@ -52,7 +53,7 @@ public class EmpleadoDao {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public EmpleadoSeguimientoResponse getEmpleadosByIdClienteSeguimiento(Long id, String fechaPago) {
+	public EmpleadoSeguimientoResponse getEmpleadosByIdClienteSeguimiento(Long id, Long idEstatus, String fechaPago) {
 		EmpleadoSeguimientoResponse resp = new EmpleadoSeguimientoResponse();
 		String sql = "select bp.id_credito,\r\n"
 				+ "e.id_empleado as idEmpleado, \r\n"
@@ -71,11 +72,11 @@ public class EmpleadoDao {
 				+ "join persona p on p.id_persona = e.id_persona \r\n"
 				+ "where \r\n"
 				+ "bp.fecha_pago = ? \r\n"
-				+ "and bp.id_estatus_pago = 125 \r\n"
+				+ "and bp.id_estatus_pago = ? \r\n"
 				+ "and bp.ind_status = 1 \r\n"
 				+ "and e.id_cliente = ?";
 		resp.setEmpleados(
-		jdbcTemplate.query(sql, new Object[]{fechaPago, id}, (rs, index) ->{
+		jdbcTemplate.query(sql, new Object[]{fechaPago, idEstatus, id}, (rs, index) ->{
 			EmpleadoDTO dto = new EmpleadoDTO();
 			dto.setIdEmpleado(rs.getLong("idEmpleado"));
 			dto.setNombreCompleto(rs.getString("nombreCompleto"));
@@ -141,6 +142,30 @@ public class EmpleadoDao {
 		return jdbcTemplate.query(sql, new Object[]{idPersona, idCliente}, (rs, index) ->{
 			EmpleadoDTO dto = new EmpleadoDTO();
 			dto.setIdPersona(rs.getLong("id_persona"));
+			return dto;
+		});
+	}
+	
+	@SuppressWarnings("deprecation")
+	public List<CreditosEmpleado> getCreditosByEmpleado(Long idEmpleado){
+		String sql = "select \r\n"
+				+ "c.id_credito, \r\n"
+				+ "c.pago_total,\r\n"
+				+ "c.monto_solicitado,\r\n"
+				+ "concat(ifnull((select num_pago  from bitacora_pagos bp where bp.id_credito  = c.id_credito and bp.id_conciliacion is not null order by  num_pago  asc LIMIT 1),0), '/',c.num_pagos) as totalPagos,\r\n"
+				+ "(select fecha_pago from bitacora_pagos bp where bp.id_credito  = c.id_credito order by  num_pago  asc LIMIT 1) as fechaInicio,\r\n"
+				+ "(select fecha_pago from bitacora_pagos bp where bp.id_credito  = c.id_credito order by  num_pago  desc LIMIT 1) as fechaFin\r\n"
+				+ "from empleado e\r\n"
+				+ "join credito c on c.id_empleado = e.id_empleado where e.id_empleado = ? ";
+		
+		return jdbcTemplate.query(sql, new Object[]{idEmpleado}, (rs, index) -> {
+			CreditosEmpleado dto = new CreditosEmpleado();
+			dto.setIdCredito(rs.getLong("id_credito"));
+			dto.setTotalCredito(rs.getBigDecimal("pago_total"));
+			dto.setMontoSolicitado(rs.getBigDecimal("monto_solicitado"));
+			dto.setFechaPrimerPago(rs.getString("fechaInicio"));
+			dto.setFechaUltimoPago(rs.getString("fechaFin"));
+			dto.setTotalPagos(rs.getString("totalPagos"));
 			return dto;
 		});
 	}

@@ -1,6 +1,7 @@
 package com.mx.api.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +29,7 @@ import com.mx.api.dto.response.JwtResponse;
 import com.mx.api.dto.response.LoginResponse;
 import com.mx.api.jwt.JwtUtils;
 import com.mx.api.jwt.services.UserDetailsSegImpl;
+import com.mx.api.model.Rol;
 import com.mx.api.model.Usuario;
 import com.mx.api.repository.RolRepository;
 import com.mx.api.repository.UserRepository;
@@ -81,12 +83,26 @@ public class LoginController extends BaseController{
 		String jwt = jwtUtils.generateJwtToken(authentication);
 		
 		UserDetailsSegImpl userDetails = (UserDetailsSegImpl) authentication.getPrincipal();
-		
-		List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
+		List<String> claveRoles = userDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
+		List<Rol> roles = new ArrayList<>();
+		for (String claveRol : claveRoles) {
+			roles.add(roleRepository.findByClaveRol(claveRol).get());
+		}
 		if (userDetails.getClave().equals(EstatusUsuarioEnum.EST_US_ACTIVO.name()) 
 				|| userDetails.getClave().equals(EstatusUsuarioEnum.EST_US_NUEVO.name())
 		) {			
-			LoginResponse info =  loginDao.parametrosLogin(userDetails.getId(), userDetails.getPersona());
+			LoginResponse info = new LoginResponse();
+			info.setClientes(loginDao.clienteLogin(userDetails.getId()));
+			info.setEmpleados(loginDao.empleadoLogin(userDetails.getId()));
+			if(!info.getClientes().isEmpty()) {
+				info.setClienteSelect(info.getClientes().get(0));
+			}
+			if(!info.getEmpleados().isEmpty()) {
+				info.setEmpleadoSelect(info.getEmpleados().get(0));
+			}
+			info.setRolSelect(roles.get(0));
+			
+			info.setPersona(userDetails.getPersona());
 			return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), roles,
 					userDetails.getClave(), jwtExpirationMs, info));
 		} else {

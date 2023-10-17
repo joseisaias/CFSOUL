@@ -43,11 +43,21 @@ public class EmpleadoController extends BaseController{
 		}
 	}
 	
+	@GetMapping("/{idEmpleado}/getCreditosByEmpleado")
+	public ResponseEntity<?> getCreditosByEmpleado(@PathVariable Long idEmpleado){
+		try {
+			return ResponseEntity.ok(new GenericResponseDTO<>(SUCCESS, HTTP_SUCCESS, null, null, SUCCESS_MESSAGE, empleadoService.getCreditosByEmpleado(idEmpleado)));
+		}catch(Exception ex) {
+			log.error("Ocurrio un error en el registro", ex);
+			return ResponseEntity.ok(new GenericResponseDTO<>(ERROR, HTTP_NOT_FOUND, null, ERROR_MESSAGE, null, null));
+		}
+	}
+	
 	@GetMapping("/{idCliente}/{fechaPago}/getEmpleadosByIdClienteSeguimiento")
 	public ResponseEntity<?> getEmpleadosByIdClienteSeguimiento(@PathVariable Long idCliente, @PathVariable String fechaPago){
 		try {
 			return ResponseEntity.ok(new GenericResponseDTO<>(SUCCESS, HTTP_SUCCESS, null, null, SUCCESS_MESSAGE, 
-					empleadoDao.getEmpleadosByIdClienteSeguimiento(idCliente, fechaPago.replace("-", "/"))));
+					empleadoDao.getEmpleadosByIdClienteSeguimiento(idCliente, 124L, fechaPago.replace("-", "/"))));
 		}catch(Exception ex) {
 			log.error("Ocurrio un error en el registro", ex);
 			return ResponseEntity.ok(new GenericResponseDTO<>(ERROR, HTTP_NOT_FOUND, null, ERROR_MESSAGE, null, null));

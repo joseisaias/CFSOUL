@@ -20,7 +20,7 @@ public class ConciliacionDao {
 	public List<ConciliacionResponse> getConciliacion(String fechaPago){
 		String sql = "select ifnull(c.razon_social, concat(c.nombre,' ',c.apellido_paterno)) as nombreCompleto, \r\n"
 				+ "	c.id_cliente, \r\n"
-				+ "	max(bp.cuota) as monto, \r\n"
+				+ "	sum(bp.cuota) as monto, \r\n"
 				+ "	count(bp.id_bitacora_pagos) as totalCreditos ,\r\n"
 				+ "	bp.id_conciliacion \r\n"
 				+ "from cliente c\r\n"

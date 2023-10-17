@@ -18,7 +18,7 @@ public interface BitacoraPagosRepository extends JpaRepository<BitacoraPagos, Lo
 			+ " BitacoraPagos bp "
 			+ " join Credito c on bp.idCredito = c.idCredito "
 			+ " join Empleado e on e.idEmpleado = c.idEmpleado"
-			+ " where bp.fechaPago = :fechaPago and e.idCliente = :idCliente and bp.idConciliacion is not null")
+			+ " where bp.fechaPago = :fechaPago and e.idCliente = :idCliente and bp.idConciliacion is null")
 	List<BitacoraPagos> findByFechaPagoIdCliente(@Param("fechaPago") String fechaPago, @Param("idCliente") Long idCliente );
 	
 	List<BitacoraPagos> findByidCredito(Long idCredito);

@@ -27,7 +27,7 @@ public class EmpleadoDao {
 				+ "p.correo_electronico,\r\n"
 				+ "p.telefono ,\r\n"
 				+ "(SELECT count(*) from credito cred where cred.id_empleado= e.id_empleado) as totalCreditos,\r\n"
-				+ "(SELECT IFNULL(max(monto_solicitado), 0) from credito cred  where cred.id_empleado= e.id_empleado) as montoTotalPrestamo,\r\n"
+				/*cambie max por sum*/+ "(SELECT IFNULL(sum(monto_solicitado), 0) from credito cred  where cred.id_empleado= e.id_empleado) as montoTotalPrestamo,\r\n"
 				+ " CASE WHEN e.ind_status = 1 THEN 'Activo' \r\n"
 				+ "    ELSE 'Inactivo' \r\n"
 				+ "    END\r\n"
@@ -169,5 +169,20 @@ public class EmpleadoDao {
 			return dto;
 		});
 	}
+	
+	@SuppressWarnings("deprecation")
+	public BigDecimal obtenerMontoMaximo(Long idEmpleado){
+		String sql = "select ifnull(sum(montos) , 0) as montoMaximo\r\n"
+				+ "from (\r\n"
+				+ "select\r\n"
+				+ "(select cuota  from bitacora_pagos bp where id_conciliacion is null and bp.id_credito = c.id_credito  order by num_pago  asc limit 1) montos\r\n"
+				+ "from empleado e join credito c on c.id_empleado = e.id_empleado \r\n"
+				+ "where e.id_empleado = ?) as pagos ";
+		
+		return jdbcTemplate.query(sql, new Object[]{idEmpleado}, (rs, index) -> {
+			return rs.getBigDecimal("montoMaximo");
+		}).get(0);
+	}
+	
 	
  }

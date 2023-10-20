@@ -1,10 +1,8 @@
-package com.mx.api.dto.request;
+package com.mx.api.dto.response;
 
 import com.mx.api.model.CuentaBancaria;
 import com.mx.api.model.Domicilio;
-import com.mx.api.model.Empleado;
 import com.mx.api.model.Persona;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,15 +12,10 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmpleadoRequest {
-
+public class UsuarioResponse {
+	private Long idUsuario;
 	private Persona persona;
-	
-	private Empleado empleado;
-	
 	private Domicilio domicilio;
-	
 	private CuentaBancaria cuentaBancaria;
-	
 	
 }

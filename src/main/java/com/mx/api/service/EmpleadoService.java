@@ -2,16 +2,13 @@ package com.mx.api.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.mx.api.dao.EmpleadoDao;
 import com.mx.api.dto.EmpleadoDTO;
 import com.mx.api.dto.request.EmpleadoRequest;
 import com.mx.api.dto.response.CatDetalleResponse;
 import com.mx.api.dto.response.CreditosEmpleado;
-import com.mx.api.model.Credito;
 import com.mx.api.model.CuentaBancaria;
 import com.mx.api.model.Domicilio;
 import com.mx.api.model.Empleado;

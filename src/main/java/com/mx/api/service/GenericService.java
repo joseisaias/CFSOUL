@@ -21,7 +21,7 @@ public class GenericService {
 	@Autowired
 	private PasswordEncoder encoder;
 	@Autowired
-	private UserRepository userRepository;
+	public UserRepository userRepository;
 	@Autowired
 	private CatalogoService catalogoService;
 	@Autowired
@@ -65,5 +65,16 @@ public class GenericService {
 		Rol rol = rolRepository.findByClaveRol(claveRol).get();
 		usuarioRolRepository.save(new UsuarioRol(u,rol));
 		return u;
+	}
+	
+	public Usuario obtenUsuarioById(Long idUsuario){
+		return userRepository.findById(idUsuario).get();
+	}
+	
+	public Usuario activaUsuarioById(Long idUsuario) {
+		CatDetalleResponse usNuevo = catalogoService.getCatDetalleByClave(CatDetalleEnum.EST_US_ACTIVO.name()).get(0);
+		Usuario u = userRepository.findById(idUsuario).get();
+		u.setEstatus(new CatDetalle(usNuevo.getIdCatDetalle()));
+		return userRepository.save(u);
 	}
 }

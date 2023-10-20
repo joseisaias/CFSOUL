@@ -7,6 +7,9 @@ public enum CatDetalleEnum {
 	TIP_DOM_EMPL,
 	/**Estatus Usuario*/
 	EST_US_NUEVO,
+	EST_US_ACTIVO,
+	EST_US_INACTIVO,
+	EST_US_BLOQUEADO,
 	/**Estatus Credito*/
 	ESTATUS_POR_PAGAR,
 	ESTATUS_PAGADO,

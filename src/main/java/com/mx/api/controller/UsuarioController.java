@@ -49,7 +49,7 @@ public class UsuarioController extends BaseController {
 	JwtUtils jwtUtils;
 	
 	
-	@Value("${app.jwtExpirationMs}")
+	@Value("${app.security.expiration}")
 	private String jwtExpirationMs;
 	
 	@Autowired

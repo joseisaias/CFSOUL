@@ -85,10 +85,11 @@ public class UsuarioController extends BaseController {
 	@PostMapping("/editaUsuarioClientePass")
 	public ResponseEntity<?> editaUsuarioClientePass(@RequestBody Usuario request) {
 		try {
+			String password = request.getPassword();
 			request = usuarioService.editaUsuarioClientePass(request);
 			if(request!=null) {
 				Authentication authentication = authenticationManager.authenticate(
-						new UsernamePasswordAuthenticationToken(request.getUsuario(), request.getPassword())
+						new UsernamePasswordAuthenticationToken(request.getUsuario(), password)
 						);
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 				String jwt = jwtUtils.generateJwtToken(authentication);

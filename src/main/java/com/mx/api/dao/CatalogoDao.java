@@ -34,6 +34,24 @@ public class CatalogoDao {
 	}
 	
 	@SuppressWarnings("deprecation")
+	public List<InputSelectResponse> getCatSelectIdCatPadre(String clave,Long idPadre) {
+		String sql = " SELECT \r\n "
+				+ " id_cat_detalle as idCat, \r\n "
+				+ " descripcion, \r\n "
+				+ " clave  \r\n "
+				+ " FROM cat_detalle cd \r\n "
+				+ " where id_cat_maestro = (SELECT id_cat_maestro FROM cat_maestro cm where cm.clave = ?) "
+				+ " and cd.id_cat_detalle_padre = ?";
+		return jdbcTemplate.query(sql, new Object[] { clave, idPadre }, (rs, rowNum) -> {
+			InputSelectResponse dto = new InputSelectResponse();
+			dto.setIdCat(rs.getLong("idCat"));
+			dto.setClave(rs.getString("clave"));
+			dto.setDescripcion(rs.getString("descripcion"));
+			return dto;
+		});
+	}
+	
+	@SuppressWarnings("deprecation")
 	public List<DomicilioSelect> getCatDomicilioByCp(String cp) {
 		if(cp.length() < 5) {
 			cp = "0" + cp;

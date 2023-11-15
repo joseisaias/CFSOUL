@@ -24,6 +24,11 @@ public class CatalogoController extends BaseController {
 		return ResponseEntity.ok(new GenericResponseDTO<>(SUCCESS, HTTP_SUCCESS, null, null, SUCCESS_MESSAGE, catalogoService.getCatSelect(clave)));
 	}
 	
+	@GetMapping("/{clave}/{idPadre}/getCatSelectIdCatPadre")
+	public ResponseEntity<?> getCatSelectIdCatPadre(@PathVariable String clave, @PathVariable Long idPadre) {
+		return ResponseEntity.ok(new GenericResponseDTO<>(SUCCESS, HTTP_SUCCESS, null, null, SUCCESS_MESSAGE, catalogoService.getCatSelectIdCatPadre(clave, idPadre)));
+	}
+	
 	@GetMapping("/{cp}/getCatDomicilioByCp")
 	public ResponseEntity<?> getCatDomicilioByCp(@PathVariable String cp){
 		return ResponseEntity.ok(new GenericResponseDTO<>(SUCCESS, HTTP_SUCCESS, null, null, SUCCESS_MESSAGE, catalogoService.getCatDomicilioByCp(cp)));

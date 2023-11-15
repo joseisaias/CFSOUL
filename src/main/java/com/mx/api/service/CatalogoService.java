@@ -19,6 +19,10 @@ public class CatalogoService {
 		return catalogoDao.getCatSelect(clave);
 	}
 	
+	public List<InputSelectResponse> getCatSelectIdCatPadre(String clave, Long idPadre) {
+		return catalogoDao.getCatSelectIdCatPadre(clave, idPadre);
+	}
+	
 	public List<DomicilioSelect> getCatDomicilioByCp(String cp) {
 		return catalogoDao.getCatDomicilioByCp(cp);
 	}

@@ -30,5 +30,8 @@ public class CatalogoService {
 	public List<CatDetalleResponse> getCatDetalleByClave(String clave){
 		return catalogoDao.getCatDetalleByClave(clave);
 	}
-
+	
+	public List<InputSelectResponse> getCatRol(){
+		return catalogoDao.getCatRol();
+	}
 }

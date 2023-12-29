@@ -38,4 +38,9 @@ public class CatalogoController extends BaseController {
 	public ResponseEntity<?> getCatDetalleByClave(@PathVariable String clave){
 		return ResponseEntity.ok(new GenericResponseDTO<>(SUCCESS, HTTP_SUCCESS, null, null, SUCCESS_MESSAGE, catalogoService.getCatDetalleByClave(clave)));
 	}
+
+	@GetMapping("/{clave}/getCatRol")
+	public ResponseEntity<?> getCatRol(@PathVariable String clave){
+		return ResponseEntity.ok(new GenericResponseDTO<>(SUCCESS, HTTP_SUCCESS, null, null, SUCCESS_MESSAGE, catalogoService.getCatRol()));
+	}
 }

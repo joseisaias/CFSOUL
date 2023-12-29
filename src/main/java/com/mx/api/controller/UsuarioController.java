@@ -2,6 +2,7 @@ package com.mx.api.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +22,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mx.api.dao.LoginDao;
+import com.mx.api.dto.ClienteDTO;
+import com.mx.api.dto.ClienteDomicilioDTO;
 import com.mx.api.dto.commons.GenericResponseDTO;
+import com.mx.api.dto.request.ClienteRequest;
+import com.mx.api.dto.request.UsuarioRequest;
 import com.mx.api.dto.response.JwtResponse;
 import com.mx.api.dto.response.LoginResponse;
 import com.mx.api.dto.response.UsuarioResponse;
 import com.mx.api.jwt.JwtUtils;
 import com.mx.api.jwt.services.UserDetailsSegImpl;
+import com.mx.api.model.Cliente;
+import com.mx.api.model.Domicilio;
 import com.mx.api.model.Rol;
 import com.mx.api.model.Usuario;
 import com.mx.api.repository.RolRepository;
 import com.mx.api.service.UsuarioService;
+import com.mx.api.util.cons.CatDetalleEnum;
 
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -121,5 +129,35 @@ public class UsuarioController extends BaseController {
 			e.printStackTrace();
 			return new ResponseEntity<>( "Ocurrió un error al realizar la petición", HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	@GetMapping("/getListUsuarios")
+	public ResponseEntity<?> getListUsuarios() {
+		long idUsuario = 0L;
+		return ResponseEntity.ok(new GenericResponseDTO<>(SUCCESS, HTTP_SUCCESS, null, null, SUCCESS_MESSAGE, usuarioService.findDetalleUsuario(idUsuario)));
+	}
+	
+	@ PostMapping("/nuevoUsuario")
+	public ResponseEntity<?> nuevoUsuario(@RequestBody UsuarioRequest usuarioResponse){
+		try {
+			System.out.println(usuarioResponse.getRol().getIdRol() );
+			usuarioService.nuevoUsuario(usuarioResponse);
+			return ResponseEntity.ok(new GenericResponseDTO<>(SUCCESS, HTTP_SUCCESS, null, null, SUCCESS_MESSAGE, "Usuario Guardado"));
+		}catch(Exception ex) {
+			log.error("Ocurrio un error en el registro", ex);
+			return ResponseEntity.ok(new GenericResponseDTO<>(ERROR, HTTP_NOT_FOUND, null, ERROR_MESSAGE, null, null));
+		}
+	}
+
+	@PostMapping("/getUsuarioById")
+	public ResponseEntity<?> getUsuarioById(@RequestBody UsuarioRequest data) {
+	
+		System.out.println("ES UN ID USUARIO ");
+		System.out.println(data.getCliente().getIdUsuario());
+	//	ClienteRequest req = new ClienteRequest();
+	//	Optional<Cliente> c = clienteRepository.findById(dto.getIdCliente());
+	//	req.setCliente(c.get());
+		Long idUsuario = (Long) data.getCliente().getIdUsuario();
+		return ResponseEntity.ok(new GenericResponseDTO<>(SUCCESS, HTTP_SUCCESS, null, null, SUCCESS_MESSAGE, usuarioService.findDetalleUsuario(idUsuario)));
 	}
 }

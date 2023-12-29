@@ -67,6 +67,21 @@ public class GenericService {
 		return u;
 	}
 	
+	public Usuario registraNuevoUsuarioRol(Persona p, Integer claveRol){
+		Usuario u = new Usuario();
+		CatDetalleResponse usNuevo = catalogoService.getCatDetalleByClave(CatDetalleEnum.EST_US_NUEVO.name()).get(0);
+		u.setEstatus(new CatDetalle(usNuevo.getIdCatDetalle()));
+		u.setUsuario(p.getCorreoElectronico());
+		u.setPersona(p);
+		u.setPassword(generaPasswordTemp());
+		userRepository.save(u);
+		
+		Rol rol = rolRepository.findById(claveRol).get();
+		usuarioRolRepository.save(new UsuarioRol(u,rol));
+		return u;
+	}
+
+
 	public Usuario obtenUsuarioById(Long idUsuario){
 		return userRepository.findById(idUsuario).get();
 	}

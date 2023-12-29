@@ -91,5 +91,23 @@ public class CatalogoDao {
 		});
 	}
 	
+	@SuppressWarnings("deprecation")
+	public List<InputSelectResponse> getCatRol() {
+		System.out.println("HOLA MUNDO");
+		String sql = " SELECT \r\n "
+				+ " id_rol,\r\n "
+				+ " clave,\r\n "
+				+ " descripcion \r\n "
+				+ " from rol \r\n "
+				+ " WHERE ind_status = 1  ";
+				return jdbcTemplate.query(sql, (rs, rowNum) -> {
+					InputSelectResponse dto = new InputSelectResponse();
+					dto.setIdCat(rs.getLong("id_rol")); // Corregir aquí si el nombre de la columna es diferente
+					dto.setClave(rs.getString("clave"));
+					dto.setDescripcion(rs.getString("descripcion"));
+					return dto;
+				});
+	}
+	
 	
 }

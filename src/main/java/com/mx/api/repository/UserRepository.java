@@ -6,11 +6,20 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.mx.api.model.Usuario;
 
 @Repository
 public interface UserRepository extends JpaRepository<Usuario, Long> {
+
+	@Transactional
+	@Query(nativeQuery = true,  value = "UPDATE usuario u SET u.ind_status = :nuevoEstatus WHERE u.id_usuario = :idUsuario")
+	@Modifying
+    int  actualizarIndEstatus(@Param("idUsuario") Long idUsuario, @Param("nuevoEstatus") Integer nuevoEstatus);
+
 
 	Optional<Usuario> findByUsuario(String usuario);
 
@@ -33,7 +42,8 @@ public interface UserRepository extends JpaRepository<Usuario, Long> {
 				+ "    ELSE 'Inactivo' \r\n"
 				+ "    END\r\n"
 				+ "as indStatusString, \r\n"
-		+	"r.id_rol\r\n"
+		+	"r.id_rol,\r\n"
+		+	"u.ind_status\r\n"
 		+	"FROM usuario u\r\n"
 		+ "LEFT JOIN persona p ON u.id_persona = p.id_persona \r\n"
 		+ "LEFT JOIN usuario_rol r ON u.id_usuario = r.id_usuario  \r\n")
@@ -59,7 +69,8 @@ public interface UserRepository extends JpaRepository<Usuario, Long> {
 					+ "    ELSE 'Inactivo' \r\n"
 					+ "    END\r\n"
 					+ "as indStatusString, \r\n"
-			+	"r.id_rol\r\n"
+			+	"r.id_rol,\r\n"
+			+	"u.ind_status\r\n"
 			+	"FROM usuario u\r\n"
 			+ "LEFT JOIN persona p ON u.id_persona = p.id_persona  \r\n"
 			+ "LEFT JOIN usuario_rol r ON u.id_usuario = r.id_usuario  \r\n"

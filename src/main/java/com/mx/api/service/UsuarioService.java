@@ -130,6 +130,7 @@ public class UsuarioService extends GenericService {
 			objDeCat.setNombreCompleto(!Objects.isNull(objects[13])?(String)objects[13]:"");
 			objDeCat.setIndStatusString(!Objects.isNull(objects[14])?(String)objects[14]:"");
 			objDeCat.setIdRol(!Objects.isNull(objects[15])?(Integer)objects[15]:0);
+			objDeCat.setIndStatus(!Objects.isNull(objects[16])?(Integer)objects[16]:0);
 			//objDeCat.setEstatus(!Objects.isNull(objects[9])?((Integer)objects[9]==1?Boolean.TRUE:Boolean.FALSE):Boolean.FALSE);
 			
 			lsCat.add(objDeCat);
@@ -166,6 +167,36 @@ public class UsuarioService extends GenericService {
 
 	}
 
+
+	public String cambiarEstatusUsuario(Long idUsuario) {
+		// Si el ID del usuario no es nulo
+		if (idUsuario != null) {
+			List<UsuarioDTO> resultado;
+			resultado = this.findDetalleUsuario(idUsuario);
+
+			// Verifica si se encontraron resultados
+			if (!resultado.isEmpty()) {
+			
+				// Suponiendo que el índice correcto de ind_estatus es el último en el array
+				int indiceIndEstatus = resultado.get(0).getIndStatus();
+				// Obtener el valor actual de ind_estatus
+				Integer indEstatusNuevo = ( (Integer)indiceIndEstatus == 1 )? 0 :1;
+				
+				// Actualizar en la base de datos (asumiendo que hay un método de actualización)
+				try {
+					int update; 
+					update = this.userRepository.actualizarIndEstatus(idUsuario, (Integer) indEstatusNuevo);
+					resultado = this.findDetalleUsuario(idUsuario);
+					return "ok";
+				} catch (Exception e) {
+					System.out.println("ERRROR AL ACTUALIZAR" + e.getMessage());
+					return "no";
+				}
+				
+			}
+		}
+		return "no";
+	}
 
 
 }

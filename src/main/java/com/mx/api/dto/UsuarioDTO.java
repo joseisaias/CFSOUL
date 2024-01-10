@@ -28,5 +28,6 @@ public class UsuarioDTO {
     private String nombreCompleto;
     private String indStatusString;
     private Integer idRol;
+    private Integer indStatus;
 
 }

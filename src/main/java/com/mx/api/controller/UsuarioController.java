@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mx.api.dao.LoginDao;
 import com.mx.api.dto.ClienteDTO;
 import com.mx.api.dto.ClienteDomicilioDTO;
+import com.mx.api.dto.UsuarioDTO;
 import com.mx.api.dto.commons.GenericResponseDTO;
 import com.mx.api.dto.request.ClienteRequest;
 import com.mx.api.dto.request.UsuarioRequest;
@@ -37,6 +38,7 @@ import com.mx.api.model.Domicilio;
 import com.mx.api.model.Rol;
 import com.mx.api.model.Usuario;
 import com.mx.api.repository.RolRepository;
+import com.mx.api.repository.UserRepository;
 import com.mx.api.service.UsuarioService;
 import com.mx.api.util.cons.CatDetalleEnum;
 
@@ -160,4 +162,16 @@ public class UsuarioController extends BaseController {
 		Long idUsuario = (Long) data.getCliente().getIdUsuario();
 		return ResponseEntity.ok(new GenericResponseDTO<>(SUCCESS, HTTP_SUCCESS, null, null, SUCCESS_MESSAGE, usuarioService.findDetalleUsuario(idUsuario)));
 	}
+
+
+	@PostMapping("/borradoLogico")
+	public ResponseEntity<?> borradoLogico(@RequestBody UsuarioRequest data){
+		Long idUsuario = (Long) data.getCliente().getIdUsuario();
+		//System.out.println(data.getCliente());
+		usuarioService.cambiarEstatusUsuario(idUsuario);
+		long idUsuarioB = 0L;
+		return ResponseEntity.ok(new GenericResponseDTO<>(SUCCESS, HTTP_SUCCESS,null, null, SUCCESS_MESSAGE, usuarioService.findDetalleUsuario(idUsuarioB)));
+	}
+	
+
 }

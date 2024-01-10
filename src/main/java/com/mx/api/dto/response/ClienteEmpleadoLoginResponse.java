@@ -13,5 +13,6 @@ public class ClienteEmpleadoLoginResponse {
 	private String nombreCliente;
 	private Long idEmpleado;
 	private BigDecimal montoMaximoPrestamo;
+	private BigDecimal salario;
 	
 }

@@ -18,7 +18,7 @@ public class LoginDao {
 	@SuppressWarnings("deprecation")
 	public List<ClienteEmpleadoLoginResponse> empleadoLogin(Long idUsuario) {
 		String sql = "select \r\n"
-				+ "c.id_cliente, ifnull(c.razon_social, concat(c.nombre,' ',c.apellido_paterno)) nombreCliente, e.id_empleado, e.monto_maximo_prestamo as montoMaximoPrestamo \r\n"
+				+ "c.id_cliente, ifnull(c.razon_social, concat(c.nombre,' ',c.apellido_paterno)) nombreCliente, e.id_empleado, e.monto_maximo_prestamo as montoMaximoPrestamo, salario \r\n"
 				+ "from usuario u \r\n"
 				+ "join persona p on u.id_persona  = p.id_persona  \r\n"
 				+ "join  empleado e on e.id_persona = p.id_persona  \r\n"
@@ -31,6 +31,7 @@ public class LoginDao {
 			dto.setIdEmpleado(rs.getLong("id_empleado"));
 			dto.setNombreCliente(rs.getString("nombreCliente"));
 			dto.setMontoMaximoPrestamo(rs.getBigDecimal("montoMaximoPrestamo"));
+			dto.setSalario(rs.getBigDecimal("salario"));
 			return dto;
 		});
 	}

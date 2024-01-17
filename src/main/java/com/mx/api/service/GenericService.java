@@ -67,7 +67,7 @@ public class GenericService {
 		return u;
 	}
 	
-	public Usuario registraNuevoUsuarioRol(Persona p, Integer claveRol){
+	public Usuario registraNuevoUsuarioRol(Persona p, Long claveRol){
 		Usuario u = new Usuario();
 		CatDetalleResponse usNuevo = catalogoService.getCatDetalleByClave(CatDetalleEnum.EST_US_NUEVO.name()).get(0);
 		u.setEstatus(new CatDetalle(usNuevo.getIdCatDetalle()));

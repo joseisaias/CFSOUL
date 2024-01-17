@@ -21,7 +21,7 @@ public class Rol extends BaseEntity {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_rol")
-    private Integer idRol;
+    private Long idRol;
     
     @Column(name = "descripcion")
     private String descripcion;

@@ -144,7 +144,7 @@ public class UsuarioService extends GenericService {
 	public void nuevoUsuario(UsuarioRequest e){
 
 		boolean isNewUsuario = e.getCliente().getIdUsuario()==null;
-		Integer idRol = e.getRol().getIdRol();
+		Long idRol =  e.getRol().getIdRol();
 		Persona p = new Persona();
 
 		p.setNombre(e.getCliente().getNombre());
